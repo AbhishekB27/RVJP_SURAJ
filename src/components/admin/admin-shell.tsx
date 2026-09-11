@@ -15,6 +15,7 @@ import {
     Megaphone,
     Menu as MenuIcon,
     ShieldAlert,
+    Tag,
     Users,
 } from 'lucide-react';
 
@@ -32,6 +33,7 @@ export const navGroups = [
         label: 'Content',
         items: [
             { href: '/admin/stories', label: 'Stories', icon: ShieldAlert },
+            { href: '/admin/categories', label: 'Categories', icon: Tag },
             { href: '/admin/posts', label: 'Blog', icon: FileText },
             { href: '/admin/campaigns', label: 'Campaigns', icon: Megaphone },
         ],

@@ -46,9 +46,13 @@ export const metadata: Metadata = {
  */
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
+    // `dark` belongs on <html>, not on a wrapper: dialogs, menus and toasts
+    // portal to document.body, so anything scoped deeper leaves them rendering
+    // against the light palette. The site is dark throughout, so this is also
+    // simply true.
     <html
       lang="en"
-      className={`${oswald.variable} ${jakarta.variable} h-full antialiased`}
+      className={`dark ${oswald.variable} ${jakarta.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

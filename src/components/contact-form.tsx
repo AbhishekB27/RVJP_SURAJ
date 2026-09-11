@@ -9,6 +9,7 @@ import {
     hideMarkerText,
     type Segment,
 } from '@/components/marker-text';
+import { CONTACT_EMAIL, INSTAGRAM_HANDLE, INSTAGRAM_URL } from '@/lib/site-contact';
 
 const heading: Segment[] = [
     { text: 'Talk' },
@@ -24,27 +25,25 @@ const topics = [
 ];
 
 /**
- * PLACEHOLDERS — replace with the organisation's real details before launch.
- * The phone is deliberately all zeros so it cannot be mistaken for a live line.
+ * Real, public channels only — read from `@/lib/site-contact` so they match the
+ * footer. The earlier list carried two invented rvjp.org addresses and an
+ * all-zeros phone number; there is no phone line yet, so that entry is gone
+ * rather than left as a number that goes nowhere.
  */
 const channels = [
     {
-        label: 'General',
-        value: 'hello@rvjp.org',
-        href: 'mailto:hello@rvjp.org',
-        note: 'Anything that does not fit the boxes',
+        label: 'Email',
+        value: CONTACT_EMAIL,
+        href: `mailto:${CONTACT_EMAIL}`,
+        external: false,
+        note: 'General enquiries, press, partnerships and volunteering',
     },
     {
-        label: 'Press & media',
-        value: 'press@rvjp.org',
-        href: 'mailto:press@rvjp.org',
-        note: 'Interviews, statements, spokespeople',
-    },
-    {
-        label: 'Phone',
-        value: '+91 00000 00000',
-        href: null,
-        note: 'Weekdays, working hours',
+        label: 'Instagram',
+        value: `@${INSTAGRAM_HANDLE}`,
+        href: INSTAGRAM_URL,
+        external: true,
+        note: 'Updates from the movement — message us here too',
     },
 ];
 
@@ -336,18 +335,17 @@ export default function ContactForm() {
                                         {channel.label}
                                     </span>
 
-                                    {channel.href ? (
-                                        <a
-                                            href={channel.href}
-                                            className={`mt-2 block text-[1.05rem] font-bold text-[#f5f5f5] transition-colors hover:text-[#e30613] ${RING}`}
-                                        >
-                                            {channel.value}
-                                        </a>
-                                    ) : (
-                                        <span className="mt-2 block text-[1.05rem] font-bold text-[#f5f5f5]">
-                                            {channel.value}
-                                        </span>
-                                    )}
+                                    {/* break-all: the Gmail address is one unbroken
+                                        word and would overflow the aside on a phone */}
+                                    <a
+                                        href={channel.href}
+                                        {...(channel.external
+                                            ? { target: '_blank', rel: 'noopener noreferrer' }
+                                            : {})}
+                                        className={`mt-2 block text-[1.05rem] font-bold break-all text-[#f5f5f5] transition-colors hover:text-[#e30613] ${RING}`}
+                                    >
+                                        {channel.value}
+                                    </a>
 
                                     <span className="mt-1.5 block text-[0.82rem] leading-snug text-[#9a9693]">
                                         {channel.note}

@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { CONTACT_EMAIL, INSTAGRAM_HANDLE, INSTAGRAM_URL } from "@/lib/site-contact";
+
 /**
  * Every href here points at a route or section that actually exists. The old
  * list carried /help, /resources, /faq, /privacy, /terms, /cookies and
@@ -39,11 +41,17 @@ const navLinks = [
     },
 ];
 
-/** PLACEHOLDER profile URLs — point these at the real accounts before launch. */
+/**
+ * Only accounts that actually exist. X, Facebook and YouTube were placeholders
+ * pointing at each platform's home page — a dead end for anyone who clicked —
+ * so they are gone until real profiles are set up.
+ */
 const socials = [
     {
         label: "Instagram",
-        href: "https://instagram.com",
+        display: `@${INSTAGRAM_HANDLE}`,
+        href: INSTAGRAM_URL,
+        external: true,
         icon: (
             <>
                 <rect x="3" y="3" width="18" height="18" rx="5" />
@@ -53,36 +61,15 @@ const socials = [
         ),
     },
     {
-        label: "X",
-        // the real wordmark — the old icon was two crossed lines, which reads
-        // as a close button rather than a logo
-        icon: (
-            <path
-                fill="currentColor"
-                stroke="none"
-                d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.66l-5.21-6.82-5.97 6.82H1.67l7.73-8.84L1.25 2.25h6.83l4.71 6.23zm-1.16 17.52h1.83L7.08 4.13H5.12z"
-            />
-        ),
-        href: "https://x.com",
-    },
-    {
-        label: "Facebook",
-        href: "https://facebook.com",
-        icon: (
-            <path
-                d="M15 8h2V5h-2c-2 0-3.5 1.5-3.5 3.5V11H9v3h2.5v6h3v-6H17l.5-3h-3V8.5c0-.3.2-.5.5-.5z"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-            />
-        ),
-    },
-    {
-        label: "YouTube",
-        href: "https://youtube.com",
+        label: "Email",
+        display: CONTACT_EMAIL,
+        href: `mailto:${CONTACT_EMAIL}`,
+        // mailto hands off to the mail app; a new tab would just open blank
+        external: false,
         icon: (
             <>
-                <rect x="2" y="6" width="20" height="12" rx="3" />
-                <path d="M11 10l4 2-4 2v-4z" fill="currentColor" stroke="none" />
+                <rect x="3" y="5" width="18" height="14" rx="2.5" />
+                <path d="M3.5 6.5l8.5 6.5 8.5-6.5" strokeLinecap="round" strokeLinejoin="round" />
             </>
         ),
     },
@@ -160,29 +147,46 @@ export default function Footer() {
                             everyone can live with dignity and safety.
                         </p>
 
-                        <div className="mt-7 flex flex-wrap gap-2.5">
+                        {/* The address and handle are shown as text, not just
+                            icons: people copy an email or search a handle far
+                            more often than they click a round logo. */}
+                        <ul className="mt-7 space-y-3">
                             {socials.map((social) => (
-                                <a
-                                    key={social.label}
-                                    href={social.href}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    aria-label={social.label}
-                                    className="group flex h-10 w-10 items-center justify-center rounded-full border border-white/[0.08] bg-white/[0.015] text-[#85817d] transition-all duration-300 hover:-translate-y-1 hover:border-[#e30613]/50 hover:bg-[#e30613]/[0.06] hover:text-[#e30613] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e30613]"
-                                >
-                                    <svg
-                                        width="17"
-                                        height="17"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="1.8"
+                                <li key={social.label}>
+                                    <a
+                                        href={social.href}
+                                        {...(social.external
+                                            ? { target: "_blank", rel: "noopener noreferrer" }
+                                            : {})}
+                                        className="group inline-flex max-w-full items-center gap-3 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#e30613]"
                                     >
-                                        {social.icon}
-                                    </svg>
-                                </a>
+                                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/[0.08] bg-white/[0.015] text-[#85817d] transition-all duration-300 group-hover:-translate-y-0.5 group-hover:border-[#e30613]/50 group-hover:bg-[#e30613]/[0.06] group-hover:text-[#e30613]">
+                                            <svg
+                                                width="17"
+                                                height="17"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="1.8"
+                                                aria-hidden="true"
+                                            >
+                                                {social.icon}
+                                            </svg>
+                                        </span>
+                                        <span className="min-w-0">
+                                            <span className="block text-[10px] font-bold uppercase tracking-[0.18em] text-[#5c5854]">
+                                                {social.label}
+                                            </span>
+                                            {/* break-all: the Gmail address has no natural
+                                                break point and overflows a phone-width column */}
+                                            <span className="block text-sm break-all text-[#b5b1ad] transition-colors duration-200 group-hover:text-white">
+                                                {social.display}
+                                            </span>
+                                        </span>
+                                    </a>
+                                </li>
                             ))}
-                        </div>
+                        </ul>
                     </div>
 
                     {/* Navigation columns */}

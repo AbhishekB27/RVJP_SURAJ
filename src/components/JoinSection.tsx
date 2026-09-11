@@ -11,6 +11,14 @@ import {
     type Segment,
 } from '@/components/marker-text';
 import { roles } from '@/lib/join-roles';
+import { cn } from '@/lib/utils';
+import {
+    Avatar,
+    AvatarFallback,
+    AvatarGroup,
+    AvatarGroupCount,
+    AvatarImage,
+} from '@/components/ui/avatar';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -19,8 +27,22 @@ const heading: Segment[] = [
     { text: 'movement', className: 'text-[#e30613]' },
 ];
 
-/** Muted, deliberately faceless — they stand for people, not specific people. */
-const avatarTints = ['#7a1f1f', '#8a3a1f', '#6b1f3a', '#1f3a6b', '#1f5a4a'];
+/**
+ * DUMMY PORTRAITS — stock photos of strangers, not RVJP members.
+ * Replace with photos of real members who have agreed to appear before launch:
+ * on a site about sexual violence, a real stranger's face beside "have already
+ * joined" is an association they never consented to.
+ *
+ * If the image host is unreachable the initials fallback renders instead, so a
+ * broken URL never shows as an empty circle.
+ */
+const members = [
+    { initials: 'PS', src: 'https://randomuser.me/api/portraits/women/44.jpg' },
+    { initials: 'RM', src: 'https://randomuser.me/api/portraits/men/32.jpg' },
+    { initials: 'AK', src: 'https://randomuser.me/api/portraits/women/68.jpg' },
+    { initials: 'VT', src: 'https://randomuser.me/api/portraits/men/75.jpg' },
+    { initials: 'SR', src: 'https://randomuser.me/api/portraits/women/12.jpg' },
+];
 
 export default function JoinSection() {
     const sectionRef = useRef<HTMLElement | null>(null);
@@ -91,33 +113,61 @@ export default function JoinSection() {
                         place for you here. Pick the part that fits your life.
                     </p>
 
-                    {/* social proof */}
-                    <div className="mt-10 flex items-center gap-4">
-                        <div className="flex items-center">
-                            {avatarTints.map((tint, i) => (
-                                <span
-                                    key={tint}
-                                    aria-hidden="true"
-                                    style={{
-                                        marginLeft: i === 0 ? 0 : '-0.7rem',
-                                        zIndex: avatarTints.length - i,
-                                        background: `linear-gradient(150deg, ${tint}, rgba(0,0,0,0.55))`,
-                                    }}
-                                    className="jn-avatar h-10 w-10 rounded-full border-2 border-[#0a0a0a] ring-1 ring-white/10"
-                                />
-                            ))}
-                            <span
-                                aria-hidden="true"
-                                style={{ marginLeft: '-0.7rem' }}
-                                className="jn-avatar flex h-10 w-10 items-center justify-center rounded-full border-2 border-[#0a0a0a] bg-[#e30613] text-[0.62rem] font-bold text-white"
-                            >
-                                +1.2k
-                            </span>
-                        </div>
+                    {/* social proof — one contained pill, so the faces and the
+                        number read as a single statement instead of two loose
+                        pieces floating side by side */}
+                    {/* `flex w-fit`, not `inline-flex`: the Join button below is
+                        itself inline-flex, and two inline boxes in a row sit on the
+                        same line on wide screens instead of stacking. */}
+                    <div className="mt-10 flex w-fit max-w-full items-center gap-4 rounded-full border border-white/[0.08] bg-white/[0.03] py-1.5 pr-6 pl-1.5">
+                        {/* Decorative — the text beside it carries the meaning — so
+                            it is hidden from screen readers rather than announcing
+                            five unnamed images.
 
-                        <p className="text-sm leading-snug text-[#9a9693]">
-                            <span className="block font-bold text-[#f5f5f5]">1,200+ people</span>
-                            have already joined
+                            The ring colour is the pill's own surface (white at 3%
+                            over #0a0a0a ≈ #111), so each face looks cut out of the
+                            pill rather than outlined in a mismatched black. */}
+                        <AvatarGroup
+                            aria-hidden="true"
+                            className="-space-x-2.5 *:data-[slot=avatar]:ring-[3px] *:data-[slot=avatar]:ring-[#111]"
+                        >
+                            {members.map((member, index) => (
+                                <Avatar
+                                    key={member.src}
+                                    size="lg"
+                                    className={cn(
+                                        // `after:hidden` removes the component's own
+                                        // hairline border, which otherwise draws a
+                                        // second, lighter edge just inside the ring.
+                                        'jn-avatar size-10 after:hidden',
+                                        // Five faces plus the text overflow a phone
+                                        // width; three still say "a crowd".
+                                        index >= 3 && 'max-sm:hidden',
+                                    )}
+                                >
+                                    <AvatarImage src={member.src} alt="" />
+                                    <AvatarFallback className="bg-[#222] text-[0.65rem] font-bold text-[#9a9693]">
+                                        {member.initials}
+                                    </AvatarFallback>
+                                </Avatar>
+                            ))}
+
+                            {/* Tinted, not solid: a solid red disc reads as a
+                                notification badge and fights the red CTA below. */}
+                            <AvatarGroupCount className="jn-avatar size-10 bg-[#2a0d0f] text-[0.66rem] font-bold tracking-tight text-[#ff5a63] ring-[3px] ring-[#111]">
+                                +1.2k
+                            </AvatarGroupCount>
+                        </AvatarGroup>
+
+                        <span aria-hidden="true" className="h-8 w-px shrink-0 bg-white/10" />
+
+                        <p className="min-w-0 leading-none">
+                            <span className="font-display block text-xl text-[#f5f5f5]">
+                                1,200<span className="text-[#e30613]">+</span>
+                            </span>
+                            <span className="mt-1 block text-xs whitespace-nowrap text-[#9a9693]">
+                                people have joined
+                            </span>
                         </p>
                     </div>
 

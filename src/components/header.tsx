@@ -117,15 +117,27 @@ export default function Header() {
         >
             <div className="mx-auto flex h-[64px] max-w-[1600px] items-center justify-between px-4 sm:px-6 lg:px-10">
                 {/* Logo */}
-                <a ref={logoRef} href="/" className="flex shrink-0 items-center gap-3">
+                <a ref={logoRef} href="/" className="flex shrink-0 items-center gap-2.5 sm:gap-3">
+                    {/* The emblem carries no text, so the name sits beside it. */}
                     <Image
                         src="/rvjp-logo.png"
-                        alt="RVJP"
+                        alt=""
                         width={180}
                         height={58}
                         className="h-[36px] w-auto object-contain sm:h-[42px]"
                         priority
                     />
+                    {/* Stays in the accessibility tree on phones, where the
+                        emblem alone would leave the link unnamed. */}
+                    <span className="sr-only sm:not-sr-only sm:block sm:leading-none">
+                        <span className="font-display block text-[15px] uppercase leading-none tracking-[0.01em] lg:text-base">
+                            <span className="text-red-600">Rape</span>{" "}
+                            <span className="text-white">Virodhi Janta Party</span>
+                        </span>
+                        <span className="mt-1.5 hidden text-[8px] font-bold uppercase leading-none tracking-[0.2em] text-white/45 md:block lg:text-[9px]">
+                            A voice. A movement. A change.
+                        </span>
+                    </span>
                 </a>
 
                 {/* Desktop Nav */}

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Heart, Scale, ShieldCheck, Users, PenSquare } from "lucide-react";
 import AboutSection from "@/components/about";
 import MissionVisionSection from "@/components/mission-vision-section";
@@ -77,20 +78,20 @@ export default function Home() {
                 </p>
 
                 <div className="mt-4 flex flex-wrap justify-center gap-3 lg:mt-6 lg:justify-start lg:gap-4">
-                  <a
-                    href="#"
-                    className="inline-flex items-center gap-2 rounded-md bg-red-600 px-5 py-2.5 text-sm font-bold uppercase tracking-wide text-white transition-colors hover:bg-red-500 lg:px-6 lg:py-3 lg:text-base"
+                  <Link
+                    href="/shareStory"
+                    className="inline-flex items-center gap-2 rounded-md bg-red-600 px-5 py-2.5 text-sm font-bold uppercase tracking-wide text-white transition-colors hover:bg-red-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white lg:px-6 lg:py-3 lg:text-base"
                   >
-                    <PenSquare className="h-4 w-4" />
+                    <PenSquare className="h-4 w-4" aria-hidden="true" />
                     Share Your Story
-                  </a>
-                  <a
-                    href="#"
-                    className="inline-flex items-center gap-2 rounded-md border border-white px-5 py-2.5 text-sm font-bold uppercase tracking-wide text-white transition-colors hover:bg-white/10 lg:px-6 lg:py-3 lg:text-base"
+                  </Link>
+                  <Link
+                    href="/join"
+                    className="inline-flex items-center gap-2 rounded-md border border-white px-5 py-2.5 text-sm font-bold uppercase tracking-wide text-white transition-colors hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white lg:px-6 lg:py-3 lg:text-base"
                   >
-                    <Users className="h-4 w-4" />
+                    <Users className="h-4 w-4" aria-hidden="true" />
                     Join RVJP
-                  </a>
+                  </Link>
                 </div>
               </div>
 
