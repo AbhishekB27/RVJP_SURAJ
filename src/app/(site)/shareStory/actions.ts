@@ -57,7 +57,22 @@ export async function submitStory(
     // Checked against the live list rather than a constant: categories are
     // managed at /admin/categories, and one turned off mid-session must not be
     // accepted just because the open page still shows its chip.
-    const allowed = await getActiveCategoryNames();
+    //
+    // This is a database read, so it gets the same handling as the save below.
+    // Left bare, an unreachable database made the action throw — the submitter
+    // saw a crash instead of the calm "try again" message.
+    let allowed: string[];
+    try {
+        allowed = await getActiveCategoryNames();
+    } catch (error) {
+        console.error('[submitStory] could not load categories:', error);
+        return {
+            status: 'error',
+            error:
+                'We could not save your story just now. Please try again in a moment.',
+        };
+    }
+
     if (!allowed.includes(category)) {
         return {
             status: 'error',
